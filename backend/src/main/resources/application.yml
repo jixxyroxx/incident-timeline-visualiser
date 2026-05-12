@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: tool92-backend
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:${db_host:localhost}}:${DB_PORT:${db_port:5432}}/${DB_NAME:${db_name:incident_db}}
+    username: ${DB_USERNAME:${db_username:postgres}}
+    password: ${DB_PASSWORD:${db_password:postgres}}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  data:
+    redis:
+      host: ${REDIS_HOST:${redis_host:localhost}}
+      port: ${REDIS_PORT:${redis_port:6379}}
+      password: ${REDIS_PASSWORD:${redis_password:}}
+
+server:
+  port: 8080
+
+jwt:
+  secret: ${JWT_SECRET:replace_with_a_long_random_secret_key}
+  expiration: ${JWT_EXPIRATION:86400000}
+  refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}
+
+app:
+  ai-service-url: ${AI_SERVICE_URL:http://localhost:5000}
+  frontend-url: ${FRONTEND_URL:http://localhost}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
