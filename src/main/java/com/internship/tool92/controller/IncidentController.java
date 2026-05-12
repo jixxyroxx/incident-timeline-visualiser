@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/incidents")
@@ -26,8 +27,10 @@ public class IncidentController {
     }
 
     @PostMapping
-    public ResponseEntity<Incident> createIncident(@RequestBody Incident incident) {
-        return ResponseEntity.ok(incidentService.createIncident(incident));
+    public ResponseEntity<Incident> createIncident(
+            @RequestBody Incident incident) {
+        return ResponseEntity.status(201)
+            .body(incidentService.createIncident(incident));
     }
 
     @PutMapping("/{id}")
@@ -38,14 +41,21 @@ public class IncidentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteIncident(@PathVariable Long id) {
+    public ResponseEntity<?> deleteIncident(@PathVariable Long id) {
         incidentService.deleteIncident(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of("message",
+            "Incident deleted successfully"));
     }
 
     @GetMapping("/status/{status}")
     public ResponseEntity<List<Incident>> getByStatus(
             @PathVariable IncidentStatus status) {
         return ResponseEntity.ok(incidentService.getIncidentsByStatus(status));
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Incident>> getByUser(
+            @PathVariable Long userId) {
+        return ResponseEntity.ok(incidentService.getIncidentsByUser(userId));
     }
 }
