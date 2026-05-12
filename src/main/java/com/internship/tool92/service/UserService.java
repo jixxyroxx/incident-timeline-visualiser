@@ -1,6 +1,7 @@
 package com.internship.tool92.service;
 
 import com.internship.tool92.entity.User;
+import com.internship.tool92.exception.AuthenticationException;
 import com.internship.tool92.exception.ResourceNotFoundException;
 import com.internship.tool92.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,21 @@ public class UserService {
     }
 
     public User saveUser(User user) {
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            throw new AuthenticationException("Email cannot be empty");
+        }
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            throw new AuthenticationException("Password cannot be empty");
+        }
+        if (user.getFullName() == null || user.getFullName().isBlank()) {
+            throw new AuthenticationException("Full name cannot be empty");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
+    }
+
+    public void deleteUser(Long id) {
+        User user = getUserById(id);
+        userRepository.delete(user);
     }
 }
